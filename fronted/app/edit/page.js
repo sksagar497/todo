@@ -1,12 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-
-const page = () => {
+import { validateForm } from "../validateForm";
+const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  console.log("id :", id);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -14,10 +13,33 @@ const page = () => {
     time: "",
   });
 
+  const fetchData = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3005/todos/${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      console.log("data:====> ", data);
+      setFormData(data);
+      console.log("form data", data.name);
+    } catch (err) {
+      console.error("Failed to fetch data:", err.message);
+    }
+  };
+
+  useEffect(() => {
+    console.log("id===>", id);
+
+    fetchData(id);
+  }, [searchParams]);
+
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
+    // e.preventDefault();
     const { id, value } = e.target;
+    console.log("handleChange called with id:", id, "and value:", value);
     setFormData((prevFormData) => ({
       ...prevFormData,
       [id]: value,
@@ -26,7 +48,7 @@ const page = () => {
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    const formErrors = validateForm();
+    const formErrors = validateForm(formData);
     if (Object.keys(formErrors).length === 0) {
       try {
         const response = await fetch(`http://localhost:3005/todos/${id}`, {
@@ -55,22 +77,22 @@ const page = () => {
     }
   };
 
-  const validateForm = () => {
-    let errors = {};
-    if (!formData.name.trim()) {
-      errors.name = "Name is required";
-    }
-    if (!formData.description.trim()) {
-      errors.description = "description is required";
-    }
-    if (!formData.status.trim()) {
-      errors.status = "status is required";
-    }
-    if (!formData.time.trim()) {
-      errors.time = "time is required";
-    }
-    return errors;
-  };
+  // const validateForm = () => {
+  //   let errors = {};
+  //   if (!formData.name.trim()) {
+  //     errors.name = "Name is required";
+  //   }
+  //   if (!formData.description.trim()) {
+  //     errors.description = "Description is required";
+  //   }
+  //   if (!formData.status.trim()) {
+  //     errors.status = "Status is required";
+  //   }
+  //   if (!formData.time.trim()) {
+  //     errors.time = "Time is required";
+  //   }
+  //   return errors;
+  // };
 
   return (
     <div>
@@ -88,7 +110,8 @@ const page = () => {
           <input
             type="text"
             id="name"
-            className={`shadow appearance-none border border-red-500 bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+            value={formData.name} // Display previous value
+            className={`shadow appearance-none border bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
               errors.name && "border-red-500"
             }`}
             onChange={handleChange}
@@ -108,7 +131,8 @@ const page = () => {
           <input
             type="text"
             id="description"
-            className={`shadow appearance-none border border-red-500 bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+            value={formData.description} // Display previous value
+            className={`shadow appearance-none border bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
               errors.description && "border-red-500"
             }`}
             onChange={handleChange}
@@ -125,14 +149,26 @@ const page = () => {
           >
             Status
           </label>
-          <input
-            type="text"
+          <select
             id="status"
+            value={formData.status}
             className={`shadow appearance-none border border-red-500 bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
               errors.status && "border-red-500"
             }`}
             onChange={handleChange}
-          />
+          >
+            <option value="Complete">Complete</option>
+            <option value="pending">pending</option>
+          </select>
+          {/* <input
+            type="text"
+            id="status"
+            value={formData.status} // Display previous value
+            className={`shadow appearance-none border bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+              errors.status && "border-red-500"
+            }`}
+            onChange={handleChange}
+          /> */}
           {errors.status && (
             <p className="text-red-500 text-xs italic">{errors.status}</p>
           )}
@@ -147,7 +183,8 @@ const page = () => {
           <input
             type="text"
             id="time"
-            className={`shadow appearance-none border border-red-500 bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+            value={formData.time} // Display previous value
+            className={`shadow appearance-none border bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
               errors.time && "border-red-500"
             }`}
             onChange={handleChange}
@@ -176,4 +213,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -58,6 +58,7 @@ const Page = (props) => {
   };
 
   const handleSort = async (status) => {
+    console.log("handleSort is called...");
     try {
       const response = await fetch(
         `http://localhost:3005/todos/filter?userId=${userId}&status=${status}`,
@@ -69,6 +70,7 @@ const Page = (props) => {
         }
       );
       if (!response.ok) {
+        console.log("000000------");
         throw new Error("Failed to get your list");
       }
       const todosData = await response.json();
@@ -95,18 +97,25 @@ const Page = (props) => {
         >
           Your all list
         </button>
-        <button
+        {/* <button
           className="bg-orange-600 hover:bg-orange-400 text-white font-semibold py-2 px-4 rounded mr-5"
           onClick={() => handleSort("pending")}
         >
           Pending
-        </button>
-        <button
+        </button> */}
+        <select
+          className="bg-orange-600 hover:bg-orange-400 text-white font-semibold py-2 px-4 rounded mr-5"
+          onChange={(e) => handleSort(e.target.value)}
+        >
+          <option value="Complete">Complete</option>
+          <option value="pending">Pending</option>
+        </select>
+        {/* <button
           className="bg-orange-600 hover:bg-orange-400 text-white font-semibold py-2 px-4 rounded"
           onClick={() => handleSort("Complete")}
         >
           Complete
-        </button>
+        </button> */}
       </div>
       <div>
         {todos && (
@@ -115,28 +124,20 @@ const Page = (props) => {
               <li key={todo.id}>
                 <div className="border border-orange-300 bg-orange-200 px-2 py-1 rounded-md">
                   <span className="font-bold text-gray-700 pr-3">Name:</span>{" "}
-                  <span>
-                    {todo.name}
-                  </span>
+                  <span>{todo.name}</span>
                   <br />
                   <span className="font-bold text-gray-700 pr-3">
                     Description:
                   </span>{" "}
-                  <span >
-                    {todo.description}
-                  </span>
+                  <span>{todo.description}</span>
                   <br />
                   <span className="font-bold text-gray-700 pr-3">
                     Status:
                   </span>{" "}
-                  <span >
-                    {todo.status}
-                  </span>
+                  <span>{todo.status}</span>
                   <br />
                   <span className="font-bold text-gray-700 pr-3">Time: </span>
-                  <span>
-                    {todo.time}
-                  </span>
+                  <span>{todo.time}</span>
                 </div>
                 <div className="flex flex-col mt-0">
                   <button

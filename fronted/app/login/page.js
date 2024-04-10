@@ -2,14 +2,18 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { validateForm } from "../validateForm";
+
 const Page = () => {
   const router = useRouter();
+  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     loggedIn: false, // New state variable to track login status
   });
   const [errors, setErrors] = useState({});
+
   const validateForm = () => {
     let errors = {};
 
