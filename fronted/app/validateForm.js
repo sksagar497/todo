@@ -9,9 +9,9 @@ export const validateForm = (formData = {}) => {
             errors.email = "Invalid email format";
         }
     }
-    // if(formData.loggedIn){
+    if(formData.loggedIn){
         
-    // }
+    }
 
     if (!formData.mobile || !formData.mobile.trim()) {
         errors.mobile = "Mobile is required";
