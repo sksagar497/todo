@@ -46,6 +46,7 @@ const Page = () => {
         console.error("Error creating user:", err.message);
       }
     } else {
+      
       console.log("error in validation")
       setErrors(formErrors);
     }

@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { validateForm } from "../validateForm";
+import CreateEdit from "../createEditTodo/page";
+
 const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -30,7 +32,6 @@ const Page = () => {
 
   useEffect(() => {
     console.log("id===>", id);
-
     fetchData(id);
   }, [searchParams]);
 
@@ -48,9 +49,10 @@ const Page = () => {
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    const formErrors = validateForm(formData);
-    if (Object.keys(formErrors).length === 0) {
+    console.log("->>>>>>>>> handleEdit");
+    
       try {
+        console.log("in the try block of handleEdit");
         const response = await fetch(`http://localhost:3005/todos/${id}`, {
           method: "PUT",
           headers: {
@@ -59,10 +61,12 @@ const Page = () => {
           body: JSON.stringify(formData),
         });
         if (!response.ok) {
+          console.log("failed to update your task");
           throw new Error("Failed to update your task");
         }
         const data = await response.json();
         const userId = data.userId;
+        
         console.log("0000000000000000000000000", data);
         console.log("----------------", userId);
 
@@ -72,31 +76,19 @@ const Page = () => {
         alert("Failed to update your task: " + err.message);
         console.error("Failed to update your task:", err.message);
       }
-    } else {
-      setErrors(formErrors);
-    }
+    
   };
-
-  // const validateForm = () => {
-  //   let errors = {};
-  //   if (!formData.name.trim()) {
-  //     errors.name = "Name is required";
-  //   }
-  //   if (!formData.description.trim()) {
-  //     errors.description = "Description is required";
-  //   }
-  //   if (!formData.status.trim()) {
-  //     errors.status = "Status is required";
-  //   }
-  //   if (!formData.time.trim()) {
-  //     errors.time = "Time is required";
-  //   }
-  //   return errors;
-  // };
 
   return (
     <div>
-      <form className="max-w-sm mx-auto mt-5 boundary">
+      <CreateEdit
+        errors={errors}
+        handleChange={handleChange}
+        handleSubmit={handleEdit}
+        edit={true}
+        formData={formData}
+      />
+      {/* <form className="max-w-sm mx-auto mt-5 boundary">
         <div className="underline mb-3">
           <h1>Write details to edit the card</h1>
         </div>
@@ -136,7 +128,7 @@ const Page = () => {
               errors.description && "border-red-500"
             }`}
             onChange={handleChange}
-            required
+            
           />
           {errors.description && (
             <p className="text-red-500 text-xs italic">{errors.description}</p>
@@ -160,15 +152,6 @@ const Page = () => {
             <option value="Complete">Complete</option>
             <option value="pending">pending</option>
           </select>
-          {/* <input
-            type="text"
-            id="status"
-            value={formData.status} // Display previous value
-            className={`shadow appearance-none border bg-orange-200 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
-              errors.status && "border-red-500"
-            }`}
-            onChange={handleChange}
-          /> */}
           {errors.status && (
             <p className="text-red-500 text-xs italic">{errors.status}</p>
           )}
@@ -205,10 +188,8 @@ const Page = () => {
         >
           LOGOUT
         </button>
-      </form>
-      {/* <button onClick={() => router.push(`/todos?userId=${user}`)}>
-        go back to main page
-      </button> */}
+      </form> */}
+      
     </div>
   );
 };

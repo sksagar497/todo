@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import List from "../list/page";
 import { useRouter } from "next/navigation";
-
+import CreateEdit from "../createEditTodo/page"
 import { useSearchParams } from "next/navigation";
 
 const page = () => {
@@ -78,7 +78,8 @@ const page = () => {
         className="flex flex-col  bg-orange-400 m-auto "
         style={{ width: "50%", top:"15%"}}
       >
-        <form className="bg-orange-200  shadow-md rounded px-8 pt-6 p-8 mt-10 flex flex-col  justify-center ">
+        <CreateEdit errors={errors} handleChange={handleChange} handleSubmit={handleSubmit} edit={false} />
+        {/* <form className="bg-orange-200  shadow-md rounded px-8 pt-6 p-8 mt-10 flex flex-col  justify-center ">
           <div className="mb-4 mt-10r">
             <h1 className="text-center text-2xl font-bold">
               Enter the details to create Todo
@@ -100,17 +101,7 @@ const page = () => {
             />
             {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
           </div>
-          {/* <div className="flex justify-center items-center">
-          <label htmlFor="email" className="mr-2">
-            Email
-          </label>
-          <input
-            id="email"
-            type="text"
-            className="border border-orange-300 bg-orange-200 px-2 py-1  rounded-md"
-            onChange={handleChange}
-          />
-        </div> */}
+          
           <div className="mb-6">
             <label
               htmlFor="description"
@@ -151,7 +142,7 @@ const page = () => {
               Create Todo
             </button>
           </div>
-        </form>
+        </form> */}
         <div className="mt-3">
           <button
             className="bg-orange-600 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded"

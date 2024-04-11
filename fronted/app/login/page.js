@@ -10,7 +10,7 @@ const Page = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    loggedIn: false, // New state variable to track login status
+    loggedIn: "false", // New state variable to track login status
   });
   const [errors, setErrors] = useState({});
 
@@ -79,6 +79,7 @@ const Page = () => {
         console.error("Error in login:", err.message);
       }
     } else {
+      alert("Enter correct credential to login")
       setErrors(formErrors);
     }
   };
